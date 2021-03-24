@@ -1,0 +1,309 @@
+---
+title: 'Math 50 Fall 2017, Homework #5'
+output: rmarkdown::github_document
+By: Aadil Islam
+---
+
+__NOTE: For your homework download and use the template__ (https://math.dartmouth.edu/~m50f17/HW5.Rmd)
+
+__Read the green comments in the rmd file to see where your answers should go.__
+
+### Normal probability plots 
+
+You can use qqnorm and qqline functions to plot probability plots of residuals. The functions 
+rstandard and rstudent
+calculate the standardized residuals and R-student residuals, respectively. 
+
+```{r}
+prop = read.table("https://math.dartmouth.edu/~m50f17/propellant.csv", header=T, sep=",")
+age <- prop$Age
+shearS <- prop$ShearS
+
+fitted = lm(shearS ~ age)
+
+stdRes = rstandard(fitted)
+rStuRes = rstudent(fitted)
+
+qqnorm(rStuRes, main="Normal Probability Plot (residuals on vertical axis)") 
+qqline(rStuRes)
+```
+
+However, note that the book uses residuals on the x-axis instead of y-axis. In order to obtain that use the parameter datax as shown below.  In the below graph x-axis denotes the R-student residuals and the y-axis is the theoretical quantiles ( in the book y-axis is probability instead of quantiles).  
+
+```{r}
+qqnorm(rStuRes, datax = TRUE ,
+       main="Normal Probability Plot") 
+qqline(rStuRes)
+```
+
+### Residual vs predicted response plot 
+
+```{r}
+yHat <- predict(fitted)
+plot (yHat, rStuRes)
+abline(0,0)
+```
+
+After observing that the observation points 5 and 6 look like potential outliers, next we delete those points and compare the fitted model of the deleted data with the full data.    
+
+```{r}
+plot(age, shearS, xlim=c(0,30), ylim=c(1600,2700))
+abline(fitted$coef, lwd = 2, col = "blue")
+
+ageRem <- age[-6] 
+ageRem <- ageRem[-5] 
+
+shearSRem <- shearS[-6]
+shearSRem <- shearSRem[-5]
+
+fitted2 = lm(shearSRem ~ ageRem)
+abline(fitted2$coef, lwd = 2, col = "red")
+```
+
+
+### A note 
+There is a dedicated library : 
+
+   MPV: Data Sets from Montgomery, Peck and Vining's Book
+   
+in order to provide an easy way to load tables from the book. 
+To install the library type : 
+
+install.packages("MPV")
+
+Below is an example how to use this library. Check https://cran.r-project.org/web/packages/MPV/MPV.pdf for table names.
+
+```{r}
+library(MPV)
+data(table.b1)
+
+y <- table.b1$y
+x1 <- table.b1$x1
+x3 <- table.b1$x3
+x8 <- table.b1$x8
+
+y.lm <- lm(y ~ x1 + x3 + x8)
+summary(y.lm)
+```
+
+## Question-1 
+
+Solve the parts (a), (b) and (c) of Problem 4.1. 
+In addition answer the following. 
+
+### Part (a)
+
+```{r}
+library(MPV)
+data(table.b1)
+y <- table.b1$y
+x2 <- table.b1$x2
+x8 <- table.b1$x8
+
+fitted <- lm(y ~ x8)
+stdRes = rstandard(fitted)
+rStuRes = rstudent(fitted)
+qqnorm(rStuRes,main="Normal Probability Plot (residuals on y-axis)") 
+qqline(rStuRes)
+qqnorm(rStuRes, datax = TRUE, main="Normal Probability Plot")
+qqline(rStuRes, datax = TRUE)
+```
+
+Most r-student residuals stay close to the line, therefore the normality assumption seems to be in check.
+
+### Part (b)
+
+```{r}
+plot (predict(fitted), rStuRes, main = "Residuals vs. Predicted Response")
+abline(0,0)
+```
+
+Residuals are contained within horizontal bands, therefore roughly constant variance. No apparent problems in model.
+
+### Part (c)
+
+```{r}
+plot (x2, rStuRes, main = "Residuals vs. Team Passing Yardage (x2)")
+abline(0,0)
+```
+
+A structure appears in the graph (upward trend in r-student residuals as x2 increases), therefore the model would be improved by adding x2 as a regressor.
+
+### Part (d)  Is it possible to perform lack of fit test using the steps (4.20) to (4.24) ?  
+
+It is not possible to perform lack of fit test using steps 4.20 to 4.24 because there  would need to exist multiple readings of y for constant x2 and x8 values, which is not the case for the data in this problem.
+
+## Question-2 
+
+Chapter 4, Problem 2 all parts. 
+
+### Part (a)
+
+```{r}
+library(MPV)
+library(MASS)
+data(table.b1)
+y <- table.b1$y
+x2 <- table.b1$x2
+x7 <- table.b1$x7
+x8 <- table.b1$x8
+
+fitted <- lm(y ~ x2+ x7+x8)
+stdRes = rstandard(fitted)
+studentRes = studres(fitted)
+rStuRes = rstudent(fitted)
+qqnorm(rStuRes, main="Normal Probability Plot (residuals on y-axis)") 
+qqline(rStuRes)
+qqnorm(rStuRes, datax = TRUE, main="Normal Probability Plot")
+qqline(rStuRes, datax = TRUE)
+```
+
+Plot does not follow the line well particularly for near-zero residuals, there is a minor problem with the normality assumption.
+
+### Part (b)
+
+```{r}
+plot (predict(fitted), rStuRes, main="Residuals vs. Predicted Response")
+abline(0,0)
+```
+
+The residuals are contained within horizontal bands, there is roughly constant variance in the data.
+
+### Part (c)
+
+```{r}
+plot (x2, rStuRes, main="Residuals vs. x2")
+abline(0,0)
+plot (x7, rStuRes, main="Residuals vs. x7")
+abline(0,0)
+plot (x8, rStuRes, main="Residuals vs. x8")
+abline(0,0)
+```
+
+There appears to be a structure in the residuals x7 plot, implying non-constant variance and that the relationship between y and x7 is nonlinear. Therefore regressor x7 is not correctly specified. However the other two plots, for x2 and x8, do not exhibit as obvious of structures, implying constant variance and that the relationships between y and each regressor are linear. So regressors x2 and x8 should be correctly specified. Note: We are a little less certain with specification for x2 because its residuals graph narrows slightly near x2 = 2500.
+
+### Part (d)
+
+```{r}
+fitted = lm(y ~ x7 + x8)
+yHat = predict(fitted)
+ei_y_given_x2 = y - yHat
+fitted = lm(x2 ~ x7 + x8)
+yHat = predict(fitted)
+ei_x2_given_x7_x8 = x2 - yHat
+plot(ei_x2_given_x7_x8, ei_y_given_x2, main="Marginal Role for x2")
+
+fitted = lm(y ~ x2 + x8)
+yHat = predict(fitted)
+ei_y_given_x7 = y - yHat
+fitted = lm(x7 ~ x2 + x8)
+yHat = predict(fitted)
+ei_x7_given_x2_x8 = x7 - yHat
+plot(ei_x7_given_x2_x8, ei_y_given_x7, main="Marginal Role for x7")
+
+fitted = lm(y ~ x2 + x7)
+yHat = predict(fitted)
+ei_y_given_x8 = y - yHat
+fitted = lm(x8 ~ x2 + x7)
+yHat = predict(fitted)
+ei_x8_given_x2_x7 = x8 - yHat
+plot(ei_x8_given_x2_x7, ei_y_given_x8, main="Marginal Role for x8")
+```
+
+The partial residuals for x2 and x8 seem to follow upward sloped and downward sloped lines, respectively. Therefore x2 and x8 enter the model linearly. The partial residuals for x7 do not follow any such pattern, therefore there isn't an identifiable linear relationship between it and response. These results support our conclusions from part (c) on which regressors likely relate linearly to response (x2 and certainly x8) and which do not (x7).
+
+### Part (e)
+
+Studentized Residuals:
+
+```{r}
+studentRes
+```
+
+R-student Residuals:
+
+```{r}
+rStuRes
+```
+
+We can use studentized and r-student residuals to identify possible outliers and influential points. The larger the studentized and r-student residuals, the more easily we can draw such a conclusion. Observation 1 could be an outlier because it has the highest studentized residual and highest r-student residual in magnitude of 2.45
+
+## Question-3 
+
+Chapter 4, Problem 19 all parts. In addition answer the following. 
+
+### Part (a)
+
+```{r}
+y=c(102,120,117,198,103,132,132,139,133,133,140,142,145,142)
+x1=c(-1,1,-1,1,-1,1,-1,1,0,0,0,0,0,0)
+x2=c(-1,-1,1,1,-1,-1,1,1,0,0,0,0,0,0)
+x3=c(1,-1,-1,1,-1,1,1,-1,0,0,0,0,0,0)
+fitted <- lm(y ~ x1+ x2+x3)
+stdRes = rstandard(fitted)
+rStuRes = rstudent(fitted)
+
+qqnorm(rStuRes, main="Normal Probability Plot (residuals on y-axis)") 
+qqline(rStuRes)
+qqnorm(rStuRes, datax = TRUE, main="Normal Probability Plot")
+qqline(rStuRes, datax = TRUE )
+plot (predict(fitted), rStuRes, main="Residuals vs. Predicted Response")
+abline(0,0)
+```
+
+Based on the Normal Probability plot, the normality assumption is in check because the majority of the r-student residuals follow a straight linear trend. Based on the Residuals vs. Predicted Response plot, there is a pattern that is nonlinear, indicating other regressor variables/transformations on regressors may be necessary for the model.
+
+### Part (b) Select observations for PE such that rows of regressor entries are constant, ie. the final 6 rows.
+
+```{r}
+y_LOF = y[9:14]
+m = 9
+n = 14
+k = 3
+SS_PE = sum(sum((y_LOF-mean(y_LOF))^2))
+SS_res = sum((y - predict(fitted))^2)
+SS_LOF = SS_res - SS_PE
+F_0 = (SS_LOF/(m-(k+1)))/(SS_PE/(n-m))
+```
+
+F0: `r F_0`, p-value: `r 1-pf(F_0,m-(k+1),(n-m))`. Since p-value is lower than alpha = 0.05, we reject the null hypothesis that the model properly describes the data. Thus we conlcude the regression function is not linear.
+
+### Part (c) Find the point with largest (in absolute value) r-student residual as a potential outlier. Repeat the regression analysis after deleting that point from the observation data. Construct the probability plot and residual vs predicted response plot. Calculate the differences (deleted vs full data) in fitted coefficients,  $MS_{res}$ and $R^2$. Comment on the differences in the plots and the values.   Do you think it is an influential point?  Do they imply any improvement? 
+
+```{r}
+rStuRes
+new_fitted <- lm(y[-4] ~ x1[-4]+ x2[-4]+x3[-4])
+stdRes = rstandard(new_fitted)
+rStuRes = rstudent(new_fitted)
+
+qqnorm(rStuRes, main="Normal Probability Plot w/out Outlier (residuals on y-axis)") 
+qqline(rStuRes)
+qqnorm(rStuRes, datax = TRUE, main="Normal Probability Plot w/out Outlier") 
+qqline(rStuRes, datax = TRUE )
+plot (predict(new_fitted), rStuRes, main="Residuals vs. Predicted Response w/out Outlier")
+abline(0,0)
+
+fitted_MS_res = sum((y-predict(fitted))^2)/(n-(m+1))
+new_MS_res = sum((y[-4]-predict(new_fitted))^2)/((n-1)-(m+1))
+
+fitted_R_sq = (sum((predict(fitted)-mean(y))^2))/(sum((y-mean(y))^2))
+new_R_sq = (sum((predict(new_fitted)-mean(y[-4]))^2))/(sum((y[-4]-mean(y[-4]))^2))
+```
+
+The largest r-student residual of 2.74 was for observation 4, where x1=1, x2=1, x3=1, y=198. Thus, observation 4 is a potential outlier.
+
+Differences (fitted coefficient over deleted data - fitted coefficient over full data):
+
+beta_0: `r new_fitted$coef[1]-fitted$coef[1]`
+
+beta_1: `r new_fitted$coef[2]-fitted$coef[2]`
+
+beta_2: `r new_fitted$coef[3]-fitted$coef[3]`
+
+beta_3: `r new_fitted$coef[4]-fitted$coef[4]`
+
+MSres: `r new_MS_res-fitted_MS_res`
+
+R_sq: `r new_R_sq - fitted_R_sq`
+
+When observation 4 is removed, the new line of best fit does not fit the data points as well, and there continues to be a pattern in the Residuals vs. Predicted Response graph. With the potential outlier removed, all estimated regressor coefficients are lower for the new fitted line. Regression coefficients 1, 2 and 3 are decreased by exactly the same amount of -4.57. This demonstrates that without observation 4, there is a weaker relationship between each regressor and observation, making it likely influential. With the outlier removed, MSres also decreases substantially by -64.11. This makes sense because observation 4 was so remote, causing there to be high variance, which is relieved upon removal from the data. Finally, upon removal of observation 4, R_sq decreased for the new model by -0.12. This indicates that although observation 4 may be remote, its existence makes the model a better fit for the data. I conclude that observation 4 is an influential point that is crucial to the model.
