@@ -1,16 +1,10 @@
 Math 50 Fall 2017, Homework \#5
 ================
 
-**NOTE: For your homework download and use the template**
-(<https://math.dartmouth.edu/~m50f17/HW5.Rmd>)
+## Normal probability plots
 
-**Read the green comments in the rmd file to see where your answers
-should go.**
-
-### Normal probability plots
-
-You can use qqnorm and qqline functions to plot probability plots of
-residuals. The functions rstandard and rstudent calculate the
+You can use `qqnorm` and `qqline` functions to plot probability plots of
+residuals. The functions `rstandard` and `rstudent` calculate the
 standardized residuals and R-student residuals, respectively.
 
 ``` r
@@ -29,11 +23,7 @@ qqline(rStuRes)
 
 ![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
-However, note that the book uses residuals on the x-axis instead of
-y-axis. In order to obtain that use the parameter datax as shown below.
-In the below graph x-axis denotes the R-student residuals and the y-axis
-is the theoretical quantiles ( in the book y-axis is probability instead
-of quantiles).
+However, note that the book uses residuals on the *x*-axis instead of *y*-axis. In order to obtain that use the parameter datax as shown below. In the below graph *x*-axis denotes the R-student residuals and the *y*-axis is the theoretical quantiles ( in the book *y*-axis is probability instead of quantiles).
 
 ``` r
 qqnorm(rStuRes, datax = TRUE ,
@@ -53,9 +43,7 @@ abline(0,0)
 
 ![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
-After observing that the observation points 5 and 6 look like potential
-outliers, next we delete those points and compare the fitted model of
-the deleted data with the full data.
+After observing that the observation points 5 and 6 look like potential outliers, next we delete those points and compare the fitted model of the deleted data with the full data.
 
 ``` r
 plot(age, shearS, xlim=c(0,30), ylim=c(1600,2700))
@@ -79,10 +67,11 @@ There is a dedicated library :
 
 MPV: Data Sets from Montgomery, Peck and Vining’s Book
 
-in order to provide an easy way to load tables from the book. To install
-the library type :
+in order to provide an easy way to load tables from the book. To install the library type :
 
+``` r
 install.packages(“MPV”)
+```
 
 Below is an example how to use this library. Check
 <https://cran.r-project.org/web/packages/MPV/MPV.pdf> for table names.
@@ -110,7 +99,6 @@ y.lm <- lm(y ~ x1 + x3 + x8)
 summary(y.lm)
 ```
 
-    ## 
     ## Call:
     ## lm(formula = y ~ x1 + x3 + x8)
     ## 
@@ -133,8 +121,7 @@ summary(y.lm)
 
 ## Question-1
 
-Solve the parts (a), (b) and (c) of Problem 4.1. In addition answer the
-following.
+Solve the parts (a), (b) and (c) of Problem 4.1. In addition answer the following.
 
 ### Part (a)
 
@@ -161,8 +148,7 @@ qqline(rStuRes, datax = TRUE)
 
 ![](README_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
 
-Most r-student residuals stay close to the line, therefore the normality
-assumption seems to be in check.
+Most r-student residuals stay close to the line, therefore the normality assumption seems to be in check.
 
 ### Part (b)
 
@@ -173,8 +159,7 @@ abline(0,0)
 
 ![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
-Residuals are contained within horizontal bands, therefore roughly
-constant variance. No apparent problems in model.
+Residuals are contained within horizontal bands, therefore roughly constant variance. No apparent problems in model.
 
 ### Part (c)
 
@@ -186,14 +171,12 @@ abline(0,0)
 ![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 A structure appears in the graph (upward trend in r-student residuals as
-x2 increases), therefore the model would be improved by adding x2 as a
+*x*<sub>2</sub> increases), therefore the model would be improved by adding *x*<sub>2</sub> as a
 regressor.
 
 ### Part (d) Is it possible to perform lack of fit test using the steps (4.20) to (4.24) ?
 
-It is not possible to perform lack of fit test using steps 4.20 to 4.24
-because there would need to exist multiple readings of y for constant x2
-and x8 values, which is not the case for the data in this problem.
+It is not possible to perform lack of fit test using steps 4.20 to 4.24 because there would need to exist multiple readings of *y* for constant *x*<sub>2</sub> and *x*<sub>8</sub> values, which is not the case for the data in this problem.
 
 ## Question-2
 
@@ -237,8 +220,7 @@ qqline(rStuRes, datax = TRUE)
 
 ![](README_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
 
-Plot does not follow the line well particularly for near-zero residuals,
-there is a minor problem with the normality assumption.
+Plot does not follow the line well particularly for near-zero residuals, there is a minor problem with the normality assumption.
 
 ### Part (b)
 
@@ -249,8 +231,7 @@ abline(0,0)
 
 ![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
-The residuals are contained within horizontal bands, there is roughly
-constant variance in the data.
+The residuals are contained within horizontal bands, there is roughly constant variance in the data.
 
 ### Part (c)
 
@@ -275,15 +256,9 @@ abline(0,0)
 
 ![](README_files/figure-gfm/unnamed-chunk-11-3.png)<!-- -->
 
-There appears to be a structure in the residuals x7 plot, implying
-non-constant variance and that the relationship between y and x7 is
-nonlinear. Therefore regressor x7 is not correctly specified. However
-the other two plots, for x2 and x8, do not exhibit as obvious of
-structures, implying constant variance and that the relationships
-between y and each regressor are linear. So regressors x2 and x8 should
-be correctly specified. Note: We are a little less certain with
-specification for x2 because its residuals graph narrows slightly near
-x2 = 2500.
+There appears to be a structure in the residuals *x*<sub>7</sub> plot, implying non-constant variance and that the relationship between *y* and *x*<sub>7</sub> is
+nonlinear. Therefore regressor *x*<sub>7</sub> is not correctly specified. However the other two plots, for *x*<sub>2</sub> and *x*<sub>8</sub>, do not exhibit as obvious of structures, implying constant variance and that the relationships between *y* and each regressor are linear. So regressors *x*<sub>2</sub> and *x*<sub>8</sub> should be correctly specified. Note: We are a little less certain with
+specification for *x*<sub>2</sub> because its residuals graph narrows slightly near *x*<sub>2</sub> = 2500.
 
 ### Part (d)
 
@@ -323,13 +298,7 @@ plot(ei_x8_given_x2_x7, ei_y_given_x8, main="Marginal Role for x8")
 
 ![](README_files/figure-gfm/unnamed-chunk-12-3.png)<!-- -->
 
-The partial residuals for x2 and x8 seem to follow upward sloped and
-downward sloped lines, respectively. Therefore x2 and x8 enter the model
-linearly. The partial residuals for x7 do not follow any such pattern,
-therefore there isn’t an identifiable linear relationship between it and
-response. These results support our conclusions from part (c) on which
-regressors likely relate linearly to response (x2 and certainly x8) and
-which do not (x7).
+The partial residuals for *x*<sub>2</sub> and *x*<sub>8</sub> seem to follow upward sloped and downward sloped lines, respectively. Therefore *x*<sub>2</sub> and *x*<sub>8</sub> enter the model linearly. The partial residuals for *x*<sub>7</sub> do not follow any such pattern, therefore there isn’t an identifiable linear relationship between it and response. These results support our conclusions from part (c) on which regressors likely relate linearly to response (*x*<sub>2</sub> and certainly *x*<sub>8</sub>) and which do not (*x*<sub>7</sub>).
 
 ### Part (e)
 
@@ -367,11 +336,7 @@ rStuRes
     ##           25           26           27           28 
     ## -1.019417881 -0.092092392 -0.256979177 -1.051031132
 
-We can use studentized and r-student residuals to identify possible
-outliers and influential points. The larger the studentized and
-r-student residuals, the more easily we can draw such a conclusion.
-Observation 1 could be an outlier because it has the highest studentized
-residual and highest r-student residual in magnitude of 2.45
+We can use studentized and r-student residuals to identify possible outliers and influential points. The larger the studentized and r-student residuals, the more easily we can draw such a conclusion. Observation 1 could be an outlier because it has the highest studentized residual and highest r-student residual in magnitude of 2.45
 
 ## Question-3
 
@@ -408,13 +373,10 @@ abline(0,0)
 
 ![](README_files/figure-gfm/unnamed-chunk-15-3.png)<!-- -->
 
-Based on the Normal Probability plot, the normality assumption is in
-check because the majority of the r-student residuals follow a straight
-linear trend. Based on the Residuals vs. Predicted Response plot, there
-is a pattern that is nonlinear, indicating other regressor
-variables/transformations on regressors may be necessary for the model.
+Based on the Normal Probability plot, the normality assumption is in check because the majority of the r-student residuals follow a straight linear trend. Based on the Residuals vs. Predicted Response plot, there is a pattern that is nonlinear, indicating other regressor variables/transformations on regressors may be necessary for the model.
 
-### Part (b) Select observations for PE such that rows of regressor entries are constant, ie. the final 6 rows.
+### Part (b) 
+- Select observations for PE such that rows of regressor entries are constant, ie. the final 6 rows.
 
 ``` r
 y_LOF = y[9:14]
@@ -427,11 +389,10 @@ SS_LOF = SS_res - SS_PE
 F_0 = (SS_LOF/(m-(k+1)))/(SS_PE/(n-m))
 ```
 
-F0: 11.80688, p-value: 0.0084929. Since p-value is lower than alpha =
-0.05, we reject the null hypothesis that the model properly describes
-the data. Thus we conlcude the regression function is not linear.
+*F*<sub>0</sub>: 11.80688, *p*-value: 0.0084929. Since *p*-value is lower than *α* = 0.05, we reject the null hypothesis that the model properly describes the data. Thus we conclude the regression function is not linear.
 
-### Part (c) Find the point with largest (in absolute value) r-student residual as a potential outlier. Repeat the regression analysis after deleting that point from the observation data. Construct the probability plot and residual vs predicted response plot. Calculate the differences (deleted vs full data) in fitted coefficients, *M**S*<sub>*r**e**s*</sub> and *R*<sup>2</sup>. Comment on the differences in the plots and the values. Do you think it is an influential point? Do they imply any improvement?
+### Part (c) 
+- Find the point with largest (in absolute value) r-student residual as a potential outlier. Repeat the regression analysis after deleting that point from the observation data. Construct the probability plot and residual vs predicted response plot. Calculate the differences (deleted vs full data) in fitted coefficients, *MS*<sub>res</sub> and *R*<sup>2</sup>. Comment on the differences in the plots and the values. Do you think it is an influential point? Do they imply any improvement?
 
 ``` r
 rStuRes
@@ -477,36 +438,20 @@ fitted_R_sq = (sum((predict(fitted)-mean(y))^2))/(sum((y-mean(y))^2))
 new_R_sq = (sum((predict(new_fitted)-mean(y[-4]))^2))/(sum((y[-4]-mean(y[-4]))^2))
 ```
 
-The largest r-student residual of 2.74 was for observation 4, where
-x1=1, x2=1, x3=1, y=198. Thus, observation 4 is a potential outlier.
+The largest r-student residual of 2.74 was for observation 4, where *x*<sub>1</sub>=1, *x*<sub>2</sub>=1, *x*<sub>3</sub>=1, *y*=198. Thus, observation 4 is a potential outlier.
 
-Differences (fitted coefficient over deleted data - fitted coefficient
-over full data):
+Differences (fitted coefficient over deleted data - fitted coefficient over full data):
 
-beta\_0: -2.6105991
+*β*<sub>0</sub>: -2.6105991
 
-beta\_1: -4.5685484
+*β*<sub>1</sub>: -4.5685484
 
-beta\_2: -4.5685484
+*β*<sub>2</sub>: -4.5685484
 
-beta\_3: -4.5685484
+*β*<sub>3</sub>: -4.5685484
 
-MSres: -111.1224558
+*MS*<sub>res</sub>: -111.1224558
 
-R\_sq: -0.1188627
+*R*<sup>2</sup>: -0.1188627
 
-When observation 4 is removed, the new line of best fit does not fit the
-data points as well, and there continues to be a pattern in the
-Residuals vs. Predicted Response graph. With the potential outlier
-removed, all estimated regressor coefficients are lower for the new
-fitted line. Regression coefficients 1, 2 and 3 are decreased by exactly
-the same amount of -4.57. This demonstrates that without observation 4,
-there is a weaker relationship between each regressor and observation,
-making it likely influential. With the outlier removed, MSres also
-decreases substantially by -64.11. This makes sense because observation
-4 was so remote, causing there to be high variance, which is relieved
-upon removal from the data. Finally, upon removal of observation 4,
-R\_sq decreased for the new model by -0.12. This indicates that although
-observation 4 may be remote, its existence makes the model a better fit
-for the data. I conclude that observation 4 is an influential point that
-is crucial to the model.
+When observation 4 is removed, the new line of best fit does not fit the data points as well, and there continues to be a pattern in the Residuals vs. Predicted Response graph. With the potential outlier removed, all estimated regressor coefficients are lower for the new fitted line. Regression coefficients 1, 2 and 3 are decreased by exactly the same amount of -4.57. This demonstrates that without observation 4, there is a weaker relationship between each regressor and observation, making it likely influential. With the outlier removed, *MS*<sub>res</sub> also decreases substantially by -64.11. This makes sense because observation 4 was so remote, causing there to be high variance, which is relieved upon removal from the data. Finally, upon removal of observation 4, *R*<sup>2</sup> decreased for the new model by -0.12. This indicates that although observation 4 may be remote, its existence makes the model a better fit for the data. I conclude that observation 4 is an influential point that is crucial to the model.
